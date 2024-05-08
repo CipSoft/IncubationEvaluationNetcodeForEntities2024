@@ -9,7 +9,7 @@ using UnityEngine;
 [UnityEngine.Scripting.Preserve]
 public class GameBootstrap : ClientServerBootstrap
 {
-    private int _RequestedThinClients = 5;
+    private int _RequestedThinClients = 0;
     private bool _LoadTest = false;
 
     public override bool Initialize(string defaultWorldName)
