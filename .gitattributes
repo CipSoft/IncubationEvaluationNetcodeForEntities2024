@@ -1,0 +1,217 @@
+# --- documentation ---
+
+# https://www.git-scm.com/docs/gitattributes
+# https://www.git-scm.com/docs/git-check-attr
+
+# --- apply changed .gitattributes ---
+
+# $ git add --renormalize .
+# $ git status
+
+# --- important note about git LFS ---
+
+# Originally this repository is not using git LFS. In case you want to use git LFS
+# you have to replace the attribute "binary" with the custom attribute "lfs" in
+# all lines below ending with "binary". Please note that "lfs" is a custom attribute
+# defined below and this only works in top-level gitattributes files. Alternatively
+# the full definition "filter=lfs diff=lfs merge=lfs -text" can be used instead.
+
+# --- custom definitions part 1 ---
+
+# Visual Studio Professional and Visual Studio Code
+*.sln                   text eol=crlf
+*.csproj                text eol=crlf linguist-language=xml
+*.code-workspace        text eol=lf linguist-language=json
+
+# Windows batch scripts
+*.bat                   text eol=crlf
+
+# Linux shell scripts
+*.sh                    text eol=lf
+
+# JSON
+*.json                  text eol=lf linguist-language=json
+
+# git files
+*.gitconfig             text eol=lf
+*.gitignore             text eol=lf
+*.gitattributes         text eol=lf
+
+# editor config files
+*.editorconfig          text eol=lf
+
+# Unity files not in external template
+*.config                text eol=lf
+
+# --- definitions from external template ---
+
+# Based on https://github.com/alexkaratarakis/gitattributes/blob/master/Unity.gitattributes being available under MIT license.
+# But slightly modified.
+
+# Define macros (only works in top-level gitattributes files)
+[attr]lfs               filter=lfs diff=lfs merge=lfs -text
+[attr]unity-yaml        text eol=lf merge=unityyamlmerge linguist-language=yaml
+
+# Optionally collapse Unity-generated files on GitHub diffs
+# [attr]unity-yaml        text eol=lf merge=unityyamlmerge linguist-language=yaml linguist-generated
+
+# Unity files
+*.cginc                 text eol=lf
+*.compute               text eol=lf linguist-language=hlsl
+*.cs                    text eol=lf diff=csharp
+*.raytrace              text eol=lf linguist-language=hlsl
+*.shader                text eol=lf
+
+# Unity JSON files
+*.asmdef                text eol=lf linguist-language=json
+*.asmref                text eol=lf linguist-language=json
+*.index                 text eol=lf linguist-language=json
+*.inputactions          text eol=lf linguist-language=json
+*.shadergraph           text eol=lf linguist-language=json
+*.shadersubgraph        text eol=lf linguist-language=json
+
+# Unity UI Toolkit files
+*.tss                   text eol=lf diff=css linguist-language=css
+*.uss                   text eol=lf diff=css linguist-language=css
+*.uxml                  text eol=lf linguist-language=xml linguist-detectable
+
+# Unity YAML
+*.anim                  unity-yaml
+*.asset                 unity-yaml
+*.brush                 unity-yaml
+*.controller            unity-yaml
+*.flare                 unity-yaml
+*.fontsettings          unity-yaml
+*.giparams              unity-yaml
+*.guiskin               unity-yaml
+*.lighting              unity-yaml
+*.mask                  unity-yaml
+*.mat                   unity-yaml
+*.meta                  unity-yaml
+*.mixer                 unity-yaml
+*.overrideController    unity-yaml
+*.playable              unity-yaml
+*.prefab                unity-yaml
+*.preset                unity-yaml
+*.renderTexture         unity-yaml
+*.scenetemplate         unity-yaml
+*.shadervariants        unity-yaml
+*.signal                unity-yaml
+*.spriteatlas           unity-yaml
+*.spriteatlasv2         unity-yaml
+*.terrainlayer          unity-yaml
+*.unity                 unity-yaml
+
+# "physic" for 3D but "physics" for 2D
+*.physicMaterial        unity-yaml
+*.physicsMaterial2D     unity-yaml
+
+# Unity LFS
+*.cubemap               binary
+*.unitypackage          binary
+
+# 3D models
+*.3dm                   binary
+*.3ds                   binary
+*.blend                 binary
+*.c4d                   binary
+*.collada               binary
+*.dae                   binary
+*.dxf                   binary
+*.FBX                   binary
+*.fbx                   binary
+*.jas                   binary
+*.lws                   binary
+*.lxo                   binary
+*.ma                    binary
+*.max                   binary
+*.mb                    binary
+*.obj                   binary
+*.ply                   binary
+*.skp                   binary
+*.stl                   binary
+*.ztl                   binary
+
+# Audio
+*.aif                   binary
+*.aiff                  binary
+*.it                    binary
+*.mod                   binary
+*.mp3                   binary
+*.ogg                   binary
+*.s3m                   binary
+*.wav                   binary
+*.xm                    binary
+
+# Video
+*.asf                   binary
+*.avi                   binary
+*.flv                   binary
+*.mov                   binary
+*.mp4                   binary
+*.mpeg                  binary
+*.mpg                   binary
+*.ogv                   binary
+*.wmv                   binary
+
+# Images
+*.bmp                   binary
+*.exr                   binary
+*.gif                   binary
+*.hdr                   binary
+*.iff                   binary
+*.jpeg                  binary
+*.jpg                   binary
+*.pict                  binary
+*.png                   binary
+*.psd                   binary
+*.tga                   binary
+*.tif                   binary
+*.tiff                  binary
+*.webp                  binary
+
+# Compressed Archive
+*.7z                    binary
+*.bz2                   binary
+*.gz                    binary
+*.rar                   binary
+*.tar                   binary
+*.zip                   binary
+
+# Compiled Dynamic Library
+*.dll                   binary
+*.pdb                   binary
+*.so                    binary
+
+# Fonts
+*.otf                   binary
+*.ttf                   binary
+
+# Executable/Installer
+*.apk                   binary
+*.exe                   binary
+
+# Documents
+*.pdf                   binary
+
+# ETC
+*.a                     binary
+*.reason                binary
+*.rns                   binary
+
+# Spine export file for Unity
+*.skel.bytes            binary
+
+# --- custom definitions part 2 ---
+
+# "When more than one pattern matches the path, a later line overrides
+# an earlier line. This overriding is done per attribute."
+# source: https://www.git-scm.com/docs/gitattributes
+
+# binary files despite having a .asset file extension
+*[Tt]errain*.asset      binary
+*[Nn]av[Mm]esh*.asset   binary
+*[Ll]ight[Mm]ap*.asset  binary
+
+# exception from the exception found in Unity's ProjectSettings folder
+NavMeshAreas.asset      unity-yaml

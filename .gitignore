@@ -1,0 +1,10 @@
+# IDEs
+**/.vsconfig
+**/.vs/
+**/.vscode/
+**/.idea/
+
+# private
+DisableCustomGitHooks.bat
+EnableCustomGitHooks.bat
+/CustomGitHooks/
