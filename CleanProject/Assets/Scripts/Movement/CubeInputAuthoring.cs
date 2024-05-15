@@ -1,6 +1,7 @@
 using System;
 using System.Diagnostics;
 using Unity.Entities;
+using Unity.Mathematics;
 using Unity.NetCode;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -26,7 +27,7 @@ public class CubeInputAuthoring : MonoBehaviour
 
 [WorldSystemFilter(WorldSystemFilterFlags.ClientSimulation)]
 [UpdateInGroup(typeof(GhostInputSystemGroup))]
-public partial struct SampleCubeInput : ISystem
+public partial struct ClientCubeInput : ISystem
 {
     public void OnUpdate(ref SystemState state)
     {
@@ -52,7 +53,7 @@ public partial struct SampleCubeInput : ISystem
 
 [WorldSystemFilter(WorldSystemFilterFlags.ThinClientSimulation)]
 [UpdateInGroup(typeof(GhostInputSystemGroup))]
-public partial struct SampleCubeInputThinClient : ISystem
+public partial struct ThinCubeInput : ISystem
 {
     int _FrameCount;
     uint _WorldIndex;
@@ -60,11 +61,6 @@ public partial struct SampleCubeInputThinClient : ISystem
     public void OnCreate(ref SystemState state)
     {
         state.RequireForUpdate<NetworkId>();
-
-        // Give every thin client some randomness
-        var rand = Unity.Mathematics.Random.CreateFromIndex((uint)Stopwatch.GetTimestamp());
-        _FrameCount = rand.NextInt(100);
-        _WorldIndex = UInt32.Parse(state.World.Name.Substring(state.World.Name.Length - 1));
     }
 
 
@@ -73,37 +69,15 @@ public partial struct SampleCubeInputThinClient : ISystem
         if (SystemAPI.TryGetSingleton<CommandTarget>(out var commandTarget) && commandTarget.targetEntity == Entity.Null)
             CreateThinClientPlayer(ref state);
 
-        byte left, right, up, down;
-        left = right = up = down = 0;
-
-        // Move in a random direction
-        var currentState = (int)(SystemAPI.Time.ElapsedTime + _WorldIndex) % 4;
-        switch (currentState)
-        {
-            case 0: left = 1; break;
-            case 1: right = 1; break;
-            case 2: up = 1; break;
-            case 3: down = 1; break;
-        }
-
-        // Jump every 100th frame
-        if (++_FrameCount % 100 == 0)
-        {
-            _FrameCount = 0;
-        }
+        var randomAngle = math.radians(UnityEngine.Random.Range(0, 360));
         
         //check if the value 
-        foreach (var playerInput in SystemAPI.Query<RefRW<CubeInput>>().WithAll<GhostOwnerIsLocal>())
+        foreach (var (playerInput, cameraInput) in SystemAPI.Query<RefRW<CubeInput>, RefRW<CameraInput>>().WithAll<GhostOwnerIsLocal>())
         {
             playerInput.ValueRW = default;
-            if (left != 0)
-                playerInput.ValueRW.Horizontal = -1;
-            if (right != 0)
-                playerInput.ValueRW.Horizontal = 1;
-            if (up != 0)
-                playerInput.ValueRW.Vertical = 1;
-            if (down != 0)
-                playerInput.ValueRW.Vertical = -1;
+            playerInput.ValueRW.Vertical = 1;
+
+            cameraInput.ValueRW.MouseX = randomAngle;
         }
     }
 
@@ -111,7 +85,9 @@ public partial struct SampleCubeInputThinClient : ISystem
     {
         var ent = state.EntityManager.CreateEntity();
         state.EntityManager.AddComponent<CubeInput>(ent);
+        state.EntityManager.AddComponent<CameraInput>(ent);
         state.EntityManager.AddBuffer<InputBufferData<CubeInput>>(ent);
+        state.EntityManager.AddBuffer<InputBufferData<CameraInput>>(ent);
 
         var connectionId = SystemAPI.GetSingleton<NetworkId>().Value;
         var connection = SystemAPI.GetSingletonEntity<NetworkId>();
