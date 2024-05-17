@@ -42,7 +42,7 @@ public partial struct CameraUpdateSystem : ISystem
 
             // Update vertical angle
             _VerticalAngle -= input.ValueRO.MouseY * 0.1f; // Adjust sensitivity as needed
-            _VerticalAngle = math.clamp(_VerticalAngle, -45f, 45f); // Clamp the vertical angle
+            _VerticalAngle = math.clamp(_VerticalAngle, -8f, 45f); // Clamp the vertical angle
 
             // Camera offset behind the player
             var distanceFromPlayer = 4f;

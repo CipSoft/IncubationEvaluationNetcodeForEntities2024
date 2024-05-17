@@ -3,12 +3,22 @@ using Unity.Entities;
 using Unity.Mathematics;
 using Unity.NetCode;
 using Unity.Transforms;
+using UnityEngine;
 
 [WorldSystemFilter(WorldSystemFilterFlags.ClientSimulation | WorldSystemFilterFlags.ThinClientSimulation | WorldSystemFilterFlags.ServerSimulation)]
 [UpdateInGroup(typeof(PredictedSimulationSystemGroup))]
 [BurstCompile]
 public partial struct CameraMovementSystem : ISystem
 {
+#if !UNITY_SERVER
+    [BurstCompile]
+    public void OnCreate(ref SystemState state)
+    {
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
+    }
+#endif
+
     [BurstCompile]
     public void OnUpdate(ref SystemState state)
     {
