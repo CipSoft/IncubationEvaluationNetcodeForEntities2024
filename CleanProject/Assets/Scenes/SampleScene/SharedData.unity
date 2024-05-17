@@ -156,6 +156,7 @@ MonoBehaviour:
     Probability: 1
   - TilePrefab: {fileID: 919132149155446097, guid: 82722cce2469b034fbb0617848aa01e9, type: 3}
     Probability: 0.05
+  WallPrefab: {fileID: 7710503493890757716, guid: 2590cc196541c1640b816b6f22c58d28, type: 3}
   FieldWidth: 10
   FieldHeight: 10
 --- !u!4 &1754708992
