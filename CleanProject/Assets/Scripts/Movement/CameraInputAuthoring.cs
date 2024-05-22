@@ -65,7 +65,6 @@ public partial struct CameraUpdateSystem : ISystem
 
 
 [WorldSystemFilter(WorldSystemFilterFlags.ClientSimulation)]
-[UpdateInGroup(typeof(GhostInputSystemGroup))]
 public partial struct ClientCameraInput : ISystem
 {
     public void OnUpdate(ref SystemState state)

@@ -35,16 +35,3 @@ public partial struct SetNicknameSystem : ISystem
         }
     }
 }
-
-//ISystem to log the nickname of the player
-[WorldSystemFilter(WorldSystemFilterFlags.ClientSimulation)]
-public partial struct NameplateSystem : ISystem
-{
-    public void OnUpdate(ref SystemState state)
-    {
-        foreach (var (nickname, ghostOwner) in SystemAPI.Query<RefRO<Nickname>, RefRO<GhostOwner>>())
-        {
-            Debug.Log($"Player {nickname.ValueRO.Value} has ghost owner {ghostOwner.ValueRO.NetworkId}");
-        }
-    }
-}
