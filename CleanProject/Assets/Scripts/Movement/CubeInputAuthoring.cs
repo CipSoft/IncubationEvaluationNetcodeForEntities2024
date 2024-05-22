@@ -81,13 +81,15 @@ public partial struct ThinCubeInput : ISystem
         }
     }
 
-    void CreateThinClientPlayer(ref SystemState state)
+    private void CreateThinClientPlayer(ref SystemState state)
     {
         var ent = state.EntityManager.CreateEntity();
         state.EntityManager.AddComponent<CubeInput>(ent);
         state.EntityManager.AddComponent<CameraInput>(ent);
+        state.EntityManager.AddComponent<BulletInput>(ent);
         state.EntityManager.AddBuffer<InputBufferData<CubeInput>>(ent);
         state.EntityManager.AddBuffer<InputBufferData<CameraInput>>(ent);
+        state.EntityManager.AddBuffer<InputBufferData<BulletInput>>(ent);
 
         var connectionId = SystemAPI.GetSingleton<NetworkId>().Value;
         var connection = SystemAPI.GetSingletonEntity<NetworkId>();

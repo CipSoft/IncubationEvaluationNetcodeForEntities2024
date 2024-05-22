@@ -4,7 +4,7 @@ using Unity.Mathematics;
 using Unity.NetCode;
 using Unity.Transforms;
 
-[WorldSystemFilter(WorldSystemFilterFlags.ClientSimulation | WorldSystemFilterFlags.ThinClientSimulation | WorldSystemFilterFlags.ServerSimulation)]
+[WorldSystemFilter(WorldSystemFilterFlags.ClientSimulation | WorldSystemFilterFlags.ServerSimulation)]
 [UpdateInGroup(typeof(PredictedSimulationSystemGroup))]
 [BurstCompile]
 public partial struct CubeMovementSystem : ISystem

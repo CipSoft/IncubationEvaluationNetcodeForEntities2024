@@ -49,7 +49,7 @@ public partial class UpdatePlayerStatsSystem : SystemBase
             playerStats.EstimatedRTT = (int)networkSnapshotAck.ValueRO.EstimatedRTT;
             playerStats.DeviationRTT = (int)networkSnapshotAck.ValueRO.DeviationRTT;
         }
-        if (_CurrentFrameVersion % 10 == 0)
+        if (_CurrentFrameVersion % 20 == 0)
             OnPlayerStatsUpdate?.Invoke(playerStats);
         SystemAPI.SetSingleton(playerStats);
     }
