@@ -95,10 +95,6 @@ public partial struct GoInGameServerSystem : ISystem
             commandBuffer.AddComponent<NetworkStreamInGame>(reqSrc.ValueRO.SourceConnection);
             // Get the NetworkId for the requesting client
             var networkId = _NetworkIdFromEntity[reqSrc.ValueRO.SourceConnection];
-
-            // Log information about the connection request that includes the client's assigned NetworkId and the name of the prefab spawned.
-            Debug.Log($"'{worldName}' setting connection '{networkId.Value}' to in game, spawning a Ghost '{prefabName}' for them!");
-
             // Instantiate the prefab
             var player = commandBuffer.Instantiate(prefab);
             // Associate the instantiated prefab with the connected client's assigned NetworkId
