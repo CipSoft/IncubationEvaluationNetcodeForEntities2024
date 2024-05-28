@@ -6,6 +6,7 @@
     "com.unity.inputsystem": "1.8.2",
     "com.unity.multiplayer.playmode": "1.0.0",
     "com.unity.netcode": "1.2.1",
+    "com.unity.physics": "1.2.1",
     "com.unity.render-pipelines.universal": "17.0.3",
     "com.unity.test-framework": "1.4.4",
     "com.unity.timeline": "1.8.6",

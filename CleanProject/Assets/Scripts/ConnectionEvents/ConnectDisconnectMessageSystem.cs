@@ -3,7 +3,7 @@ using Unity.Entities;
 using Unity.NetCode;
 using UnityEngine;
 
-[UpdateAfter(typeof(NetworkStreamReceiveSystem))]
+[UpdateInGroup(typeof(Unity.Entities.SimulationSystemGroup))]
 [WorldSystemFilter(WorldSystemFilterFlags.ServerSimulation)]
 [BurstCompile]
 public partial struct ConnectDisconnectMessageSystem : ISystem
