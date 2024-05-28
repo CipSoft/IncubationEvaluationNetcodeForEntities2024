@@ -1,6 +1,7 @@
 using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;
+using Unity.Mathematics;
 using Unity.NetCode;
 using Unity.Transforms;
 
@@ -12,11 +13,7 @@ public partial struct BulletMovementSystem : ISystem
     [BurstCompile]
     public void OnUpdate(ref SystemState state)
     {
-        var deltaTime = SystemAPI.Time.DeltaTime;
-
         var prefab = SystemAPI.GetSingleton<Bullet>().BulletPrefab;
-
-        state.EntityManager.GetName(prefab, out var prefabName);
         var commandBuffer = new EntityCommandBuffer(Allocator.Temp);
 
         foreach (var (input, trans) in SystemAPI.Query<RefRW<BulletInput>, RefRO<LocalTransform>>().WithAll<Simulate>())
@@ -24,8 +21,16 @@ public partial struct BulletMovementSystem : ISystem
             if (input.ValueRO.Fire)
             {
                 var bullet = commandBuffer.Instantiate(prefab);
-                commandBuffer.AddComponent(bullet, trans.ValueRO);
+                //move trans forward in the direction it is facing
+                var move = new float3(0, 2, 0);
+                var worldMove = math.rotate(trans.ValueRO.Rotation, move);
+                float3 newPosition = trans.ValueRO.Position + worldMove;
+                var newTransform = new LocalTransform { Position = newPosition, Rotation = trans.ValueRO.Rotation, Scale = trans.ValueRO.Scale };
+                commandBuffer.AddComponent(bullet, newTransform);
+                commandBuffer.SetComponent(bullet, new BulletBehaviour { Speed = 5, LifeTime = 2, Entity = bullet });
+#if !UNITY_SERVER
                 input.ValueRW = new BulletInput { Fire = false };
+#endif
             }
         }
         commandBuffer.Playback(state.EntityManager);

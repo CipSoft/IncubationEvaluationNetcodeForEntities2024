@@ -29,7 +29,7 @@ public partial struct CubeMovementSystem : ISystem
         foreach (var (input, trans) in SystemAPI.Query<RefRO<CubeInput>, RefRW<LocalTransform>>().WithAll<Simulate>())
         {
             var moveInput = new float2(input.ValueRO.Horizontal, input.ValueRO.Vertical);
-            moveInput = math.normalizesafe(moveInput) * deltaTime * speed;
+            moveInput = deltaTime * speed * math.normalizesafe(moveInput);
 
             // Create a movement vector in the player's local space
             var localMove = new float3(moveInput.x, 0, moveInput.y);

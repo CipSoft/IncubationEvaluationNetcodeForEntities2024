@@ -213,9 +213,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 255813d7abf5556438ec70019904ccf2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Speed: 0
-  LifeTime: 0
-  BulletPrefab: {fileID: 1353320933336236362, guid: 172d2c5234604dd4ab6fdf335e06ad01, type: 3}
+  Speed: 5
+  LifeTime: 2
+  BulletPrefab: {fileID: 5265089945446023413, guid: 172d2c5234604dd4ab6fdf335e06ad01, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
