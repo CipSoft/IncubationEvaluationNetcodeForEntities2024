@@ -24,22 +24,13 @@ public class BulletInputAuthoring : MonoBehaviour
 [UpdateInGroup(typeof(GhostInputSystemGroup))]
 public partial struct BulletSystem : ISystem
 {
-    private float _LastFireTime;
     public void OnUpdate(ref SystemState state)
     {
-        var mouse = Mouse.current;
-        if (mouse == null)
-            return;
-
-        var fire = mouse.leftButton.isPressed;
+        var fire = Keyboard.current.spaceKey.isPressed;
         
         foreach (var bulletInput in SystemAPI.Query<RefRW<BulletInput>>().WithAll<GhostOwnerIsLocal>())
         {
-            if (fire && Time.time - _LastFireTime > 1f)
-            {
-                bulletInput.ValueRW = new BulletInput { Fire = true };
-                _LastFireTime = Time.time;
-            }
+            bulletInput.ValueRW = new BulletInput { Fire = fire };
         }
     }
 }

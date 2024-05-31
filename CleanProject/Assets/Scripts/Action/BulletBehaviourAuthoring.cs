@@ -1,6 +1,7 @@
 using Unity.Collections;
 using Unity.Entities;
 using Unity.Mathematics;
+using Unity.NetCode;
 using Unity.Transforms;
 using UnityEngine;
 
@@ -53,7 +54,7 @@ public partial struct BulletBehaviourSystem : ISystem
             bulletBehaviour.ValueRW.LifeTime -= deltaTime;
 
             //move entity in the direction it is facing
-            var move = new float3(0, bulletBehaviour.ValueRO.Speed * deltaTime, 0);
+            var move = new float3(0, 0, bulletBehaviour.ValueRO.Speed * deltaTime);
             var worldMove = math.rotate(trans.ValueRO.Rotation, move);
 
             float3 newPosition = trans.ValueRO.Position + worldMove;

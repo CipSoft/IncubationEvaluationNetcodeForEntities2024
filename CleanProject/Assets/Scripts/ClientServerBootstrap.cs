@@ -1,6 +1,7 @@
 using System;
 using Unity.Entities;
 using Unity.NetCode;
+using Unity.Networking.Transport;
 using UnityEngine;
 
 // Create a custom bootstrap, which enables auto-connect.
@@ -15,6 +16,7 @@ public class GameBootstrap : ClientServerBootstrap
     public override bool Initialize(string defaultWorldName)
     {
         AutoConnectPort = 5030;
+        DefaultConnectAddress = NetworkEndpoint.Parse("192.168.200.229", AutoConnectPort, NetworkFamily.Ipv4);
 
         var consoleArgs = Environment.GetCommandLineArgs();
 
@@ -57,7 +59,5 @@ public class GameBootstrap : ClientServerBootstrap
                 World.DefaultGameObjectInjectionWorld = world;
             }
         }
-
-        Debug.Log($"Created {_RequestedThinClients} thin clients");
     }
 }
