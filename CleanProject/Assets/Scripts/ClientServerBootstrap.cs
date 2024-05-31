@@ -15,8 +15,10 @@ public class GameBootstrap : ClientServerBootstrap
 
     public override bool Initialize(string defaultWorldName)
     {
+#if !UNITY_EDITOR
+        DefaultConnectAddress = NetworkEndpoint.Parse("192.168.200.229", 5030, NetworkFamily.Ipv4);
+#endif
         AutoConnectPort = 5030;
-        DefaultConnectAddress = NetworkEndpoint.Parse("192.168.200.229", AutoConnectPort, NetworkFamily.Ipv4);
 
         var consoleArgs = Environment.GetCommandLineArgs();
 
