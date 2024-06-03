@@ -15,12 +15,11 @@ public class GameBootstrap : ClientServerBootstrap
 
     public override bool Initialize(string defaultWorldName)
     {
-#if !UNITY_EDITOR
-        DefaultConnectAddress = NetworkEndpoint.Parse("192.168.200.229", 5030, NetworkFamily.Ipv4);
-#endif
-        AutoConnectPort = 5030;
+        NetworkStreamReceiveSystem.DriverConstructor = new CleanDriverConstructor();
 
         var consoleArgs = Environment.GetCommandLineArgs();
+        var ip = "192.168.200.229";
+        short port = 5030;
 
         for (int i = 0; i < consoleArgs.Length; i++)
         {
@@ -33,16 +32,35 @@ public class GameBootstrap : ClientServerBootstrap
             {
                 _LoadTest = true;
             }
+
+            if (consoleArgs[i] == "-ip")
+            {
+                ip = consoleArgs[i + 1];
+            }
+
+            if (consoleArgs[i] == "-port")
+            {
+                port = short.Parse(consoleArgs[i + 1]);
+            }
         }
+#if !UNITY_EDITOR
+        DefaultConnectAddress = NetworkEndpoint.Parse("192.168.200.229", 5030, NetworkFamily.Ipv4);
+#endif
+        AutoConnectPort = 5030;
 
         TryCreateThinClientsIfRequested();
         
         if (_LoadTest)
         {
+            Application.targetFrameRate = 10;
             return true;
         }
         else
         {
+#if !UNITY_SERVER
+            Application.targetFrameRate = 60;
+            QualitySettings.vSyncCount = 1;
+#endif
             return base.Initialize(defaultWorldName);
         }
     }
@@ -61,5 +79,26 @@ public class GameBootstrap : ClientServerBootstrap
                 World.DefaultGameObjectInjectionWorld = world;
             }
         }
+    }
+}
+
+public class CleanDriverConstructor : INetworkStreamDriverConstructor
+{
+    public void CreateClientDriver(World world, ref NetworkDriverStore driverStore, NetDebug netDebug)
+    {
+        var settings = DefaultDriverBuilder.GetNetworkSettings();
+        // Left as default: FixSettingsForMegacityMetro(settings, ???);
+        DefaultDriverBuilder.RegisterClientUdpDriver(world, ref driverStore, netDebug, settings);
+    }
+
+    public void CreateServerDriver(World world, ref NetworkDriverStore driverStore, NetDebug netDebug)
+    {
+        var settings = DefaultDriverBuilder.GetNetworkServerSettings();
+        if (settings.TryGet(out NetworkConfigParameter networkConfig))
+        {
+            networkConfig.sendQueueCapacity = networkConfig.receiveQueueCapacity = 5000;
+            settings.AddRawParameterStruct(ref networkConfig);
+        }
+        DefaultDriverBuilder.RegisterServerDriver(world, ref driverStore, netDebug, settings);
     }
 }

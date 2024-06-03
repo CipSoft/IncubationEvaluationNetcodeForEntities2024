@@ -45,7 +45,7 @@ public partial struct CameraUpdateSystem : ISystem
             _VerticalAngle = math.clamp(_VerticalAngle, -8f, 45f); // Clamp the vertical angle
 
             // Camera offset behind the player
-            var distanceFromPlayer = 4f;
+            var distanceFromPlayer = 8f;
             var heightAbovePlayer = 3f;
 
             var cameraOffset = new float3(0, heightAbovePlayer, -distanceFromPlayer);

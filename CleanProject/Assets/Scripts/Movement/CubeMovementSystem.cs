@@ -2,6 +2,8 @@ using Unity.Burst;
 using Unity.Entities;
 using Unity.Mathematics;
 using Unity.NetCode;
+using Unity.Physics;
+using Unity.Physics.Systems;
 using Unity.Transforms;
 
 [WorldSystemFilter(WorldSystemFilterFlags.ClientSimulation | WorldSystemFilterFlags.ServerSimulation)]
@@ -14,17 +16,6 @@ public partial struct CubeMovementSystem : ISystem
     {
         var deltaTime = SystemAPI.Time.DeltaTime;
         var speed = 4f;
-
-        // Assume field size is defined somewhere accessible
-        // Ideally, this should be a component that we can query, but for this example, we use constants
-        const float tileSize = 4f;
-        const int fieldWidth = 10; // Replace with actual field width
-        const int fieldHeight = 10; // Replace with actual field height
-
-        float minX = -.75f;
-        float maxX = .75f + (fieldWidth - 1) * tileSize;
-        float minZ = -.75f;
-        float maxZ = .75f + (fieldHeight - 1) * tileSize;
 
         foreach (var (input, trans) in SystemAPI.Query<RefRO<CubeInput>, RefRW<LocalTransform>>().WithAll<Simulate>())
         {
@@ -40,12 +31,28 @@ public partial struct CubeMovementSystem : ISystem
             // Calculate the potential new position
             float3 newPosition = trans.ValueRW.Position + worldMove;
 
-            // Clamp the new position to stay within the field boundaries
-            newPosition.x = math.clamp(newPosition.x, minX, maxX);
-            newPosition.z = math.clamp(newPosition.z, minZ, maxZ);
-
             // Update the player's position
             trans.ValueRW.Position = newPosition;
+        }
+    }
+}
+
+[WorldSystemFilter(WorldSystemFilterFlags.ClientSimulation | WorldSystemFilterFlags.ServerSimulation)]
+[UpdateInGroup(typeof(BeforePhysicsSystemGroup))]
+partial struct PhysicsContraintSystem : ISystem
+{
+    [BurstCompile]
+    public void OnUpdate(ref SystemState state)
+    {
+        foreach (var (velocity, trans) in SystemAPI.Query<RefRW<PhysicsVelocity>, RefRW<LocalTransform>>().WithAll<GhostOwnerIsLocal>())
+        {
+            velocity.ValueRW.Linear = float3.zero;
+            velocity.ValueRW.Angular = float3.zero;
+
+            trans.ValueRW.Position.y = 0;
+
+            trans.ValueRW.Rotation.value.x = 0;
+            trans.ValueRW.Rotation.value.z = 0;
         }
     }
 }

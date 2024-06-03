@@ -57,6 +57,14 @@ public partial class WorldUIControllerSystem : SystemBase
 
     protected override void OnUpdate()
     {
+        if (_WorldUIController == null)
+        {
+            _WorldUIController = GameObject.FindFirstObjectByType<WorldUIController>();
+            if (_WorldUIController == null)
+            {
+                return;
+            }
+        }
         foreach (var (localTransform, nickname, ghostOwner) in SystemAPI.Query<RefRO<LocalTransform>, RefRO<Nickname>, RefRO<GhostOwner>>())
         {
             _WorldUIController.ShowNameplate(nickname.ValueRO.Value.ToString(), localTransform.ValueRO, ghostOwner.ValueRO.NetworkId);

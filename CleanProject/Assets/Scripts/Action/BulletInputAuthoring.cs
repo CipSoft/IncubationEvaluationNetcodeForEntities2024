@@ -40,13 +40,19 @@ public partial struct BulletSystem : ISystem
 public partial struct ThinClientBulletSystem : ISystem
 {
     private float _LastFireTime;
+    private float _RandomOffset;
+
+    public void OnCreate(ref SystemState state)
+    {
+        _RandomOffset = Random.Range(10f, 30f);
+    }
 
     public void OnUpdate(ref SystemState state)
     {
         foreach (var bulletInput in SystemAPI.Query<RefRW<BulletInput>>().WithAll<GhostOwnerIsLocal>())
         {
             //only fire every 2 seconds
-            if (Time.time - _LastFireTime > 2f)
+            if (Time.time - _LastFireTime > _RandomOffset)
             {
                 bulletInput.ValueRW = new BulletInput { Fire = true };
                 _LastFireTime = Time.time;

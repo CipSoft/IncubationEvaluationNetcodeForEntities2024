@@ -34,7 +34,7 @@ public partial struct BulletMovementSystem : ISystem
                 float3 newPosition = trans.ValueRO.Position + worldMove;
                 var newTransform = new LocalTransform { Position = newPosition, Rotation = trans.ValueRO.Rotation, Scale = trans.ValueRO.Scale };
                 commandBuffer.AddComponent(bullet, newTransform);
-                commandBuffer.SetComponent(bullet, new BulletBehaviour { Speed = 5, LifeTime = 2, Entity = bullet });
+                commandBuffer.SetComponent(bullet, new BulletBehaviour { Speed = 20, LifeTime = 1, Entity = bullet });
             }
         }
         commandBuffer.Playback(state.EntityManager);
