@@ -31,10 +31,10 @@ public partial struct ClientCubeInput : ISystem
 {
     public void OnUpdate(ref SystemState state)
     {
-        bool left = Keyboard.current.leftArrowKey.isPressed;
-        bool right = Keyboard.current.rightArrowKey.isPressed;
-        bool up = Keyboard.current.upArrowKey.isPressed;
-        bool down = Keyboard.current.downArrowKey.isPressed;
+        bool left = Keyboard.current.aKey.isPressed;
+        bool right = Keyboard.current.dKey.isPressed;
+        bool up = Keyboard.current.wKey.isPressed;
+        bool down = Keyboard.current.sKey.isPressed;
 
         foreach (var playerInput in SystemAPI.Query<RefRW<CubeInput>>().WithAll<GhostOwnerIsLocal>())
         {

@@ -1,16 +1,15 @@
 using Unity.Burst;
-using Unity.Collections;
 using Unity.Entities;
 using Unity.Mathematics;
-using Unity.NetCode;
 using Unity.Transforms;
+using Unity.Collections;
+using Unity.NetCode;
 
-[WorldSystemFilter(WorldSystemFilterFlags.ServerSimulation | WorldSystemFilterFlags.ClientSimulation)]
+[WorldSystemFilter(WorldSystemFilterFlags.ServerSimulation)]
 [UpdateInGroup(typeof(PredictedSimulationSystemGroup))]
 [BurstCompile]
 public partial struct BulletMovementSystem : ISystem
 {
-
     [BurstCompile]
     public void OnCreate(ref SystemState state)
     {
@@ -28,13 +27,30 @@ public partial struct BulletMovementSystem : ISystem
             if (input.ValueRO.Fire)
             {
                 var bullet = commandBuffer.Instantiate(prefab);
-                //move trans forward in the direction it is facing
-                var move = new float3(0, 0, 2);
-                var worldMove = math.rotate(trans.ValueRO.Rotation, move);
-                float3 newPosition = trans.ValueRO.Position + worldMove;
-                var newTransform = new LocalTransform { Position = newPosition, Rotation = trans.ValueRO.Rotation, Scale = trans.ValueRO.Scale };
+
+                var initialVelocity = math.mul(trans.ValueRO.Rotation, new float3(0, 1, 1)) * 10f; // Adjust initial speed
+
+                var newTransform = new LocalTransform
+                {
+                    Position = trans.ValueRO.Position,
+                    Rotation = trans.ValueRO.Rotation,
+                    Scale = trans.ValueRO.Scale
+                };
+
                 commandBuffer.AddComponent(bullet, newTransform);
-                commandBuffer.SetComponent(bullet, new BulletBehaviour { Speed = 20, LifeTime = 1, Entity = bullet });
+
+                // Set the initial time and initial velocity for the bullet
+                float initialTime = (float)SystemAPI.Time.ElapsedTime;
+
+                commandBuffer.SetComponent(bullet, new BulletBehaviour
+                {
+                    Speed = 10f, // Adjust speed
+                    LifeTime = 2.5f, // Adjust lifetime
+                    Entity = bullet,
+                    InitialVelocity = initialVelocity,
+                    InitialTime = initialTime,
+                    Gravity = -9.81f // Adjust gravity as needed
+                });
             }
         }
         commandBuffer.Playback(state.EntityManager);
