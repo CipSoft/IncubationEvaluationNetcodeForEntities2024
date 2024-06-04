@@ -44,7 +44,7 @@ public class GameBootstrap : ClientServerBootstrap
             }
         }
 #if !UNITY_EDITOR
-        DefaultConnectAddress = NetworkEndpoint.Parse("192.168.200.229", 5030, NetworkFamily.Ipv4);
+        DefaultConnectAddress = NetworkEndpoint.Parse(ip, 5030, NetworkFamily.Ipv4);
 #endif
         AutoConnectPort = 5030;
 

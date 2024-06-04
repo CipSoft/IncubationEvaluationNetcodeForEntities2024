@@ -106,8 +106,17 @@ public partial struct BulletCollisionSystem : ISystem
 
                 foreach (var hit in hits)
                 {
-                    if (hit.Entity == Entity.Null || entity == Entity.Null || hit.Entity == bulletBehaviour.Entity || state.EntityManager.HasComponent<BulletBehaviour>(hit.Entity))
+                    if (hit.Entity == Entity.Null || 
+                        entity == Entity.Null || 
+                        hit.Entity == bulletBehaviour.Entity || 
+                        state.EntityManager.HasComponent<BulletBehaviour>(hit.Entity) ||
+                        !state.EntityManager.HasComponent<Nickname>(hit.Entity) ||
+                        state.EntityManager.HasComponent<Bounce>(hit.Entity) ||
+                        bulletBehaviour.LifeTime <= 0 ||
+                        bulletBehaviour.LifeTime > .5f)
                         continue;
+                    commandBuffer.DestroyEntity(entity);
+                    commandBuffer.AddComponent(hit.Entity, new Bounce { Time = 0, Entity = hit.Entity, OriginalScale = state.EntityManager.GetComponentData<LocalTransform>(hit.Entity).Scale });
                 }
             }
         }
@@ -116,4 +125,47 @@ public partial struct BulletCollisionSystem : ISystem
         commandBuffer.Dispose();
         entities.Dispose();
     }
+}
+
+public struct Bounce : IComponentData
+{
+    public float Time;
+    public float OriginalScale;
+    public Entity Entity;
+}
+
+[UpdateInGroup(typeof(SimulationSystemGroup))]
+[WorldSystemFilter(WorldSystemFilterFlags.ServerSimulation)]
+[BurstCompile]
+public partial struct BounceSystem : ISystem
+{
+  [BurstCompile]
+  public void OnUpdate(ref SystemState state)
+  {
+    var deltaTime = SystemAPI.Time.DeltaTime;
+
+    var commandBuffer = new EntityCommandBuffer(Allocator.Temp);
+
+    foreach (var (bounce, trans) in SystemAPI.Query<RefRW<Bounce>, RefRW<LocalTransform>>())
+    {
+      bounce.ValueRW.Time += deltaTime;
+
+      // Calculate a factor between 0 and 1 to control the bounce animation
+      float bounceFactor = Mathf.Sin(bounce.ValueRO.Time * Mathf.PI * 2); 
+
+      // Apply the bounce effect to the scale (uniform on all axes)
+      float scaleFactor = 1f + bounceFactor * 0.2f; // Adjust 0.2f to control bounce intensity
+      trans.ValueRW.Scale = scaleFactor;
+
+      // Destroy the Bounce component after a short duration
+      if (bounce.ValueRO.Time > 0.2f) // Adjust 0.2f to control bounce duration
+      {
+        trans.ValueRW.Scale = bounce.ValueRO.OriginalScale;
+        commandBuffer.RemoveComponent<Bounce>(bounce.ValueRO.Entity);
+      }
+    }
+
+    commandBuffer.Playback(state.EntityManager);
+    commandBuffer.Dispose();
+  }
 }

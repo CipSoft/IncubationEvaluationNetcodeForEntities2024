@@ -28,7 +28,7 @@ public partial struct BulletMovementSystem : ISystem
             {
                 var bullet = commandBuffer.Instantiate(prefab);
 
-                var initialVelocity = math.mul(trans.ValueRO.Rotation, new float3(0, 1, 1)) * 10f; // Adjust initial speed
+                var initialVelocity = math.mul(trans.ValueRO.Rotation, new float3(0, .6f, 1)) * 10f; // Adjust initial speed
 
                 var newTransform = new LocalTransform
                 {
@@ -45,7 +45,7 @@ public partial struct BulletMovementSystem : ISystem
                 commandBuffer.SetComponent(bullet, new BulletBehaviour
                 {
                     Speed = 10f, // Adjust speed
-                    LifeTime = 2.5f, // Adjust lifetime
+                    LifeTime = 1.5f, // Adjust lifetime
                     Entity = bullet,
                     InitialVelocity = initialVelocity,
                     InitialTime = initialTime,
