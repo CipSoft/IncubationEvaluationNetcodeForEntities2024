@@ -1,0 +1,17 @@
+{
+    "name": "Chafficui.BuildPro.Editor",
+    "rootNamespace": "",
+    "references": [
+        "Chafficui.BuildPro",
+        "Chafficui.BuildPro.Editor.Utils"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
