@@ -17,7 +17,7 @@ public partial struct CubeMovementSystem : ISystem
         var deltaTime = SystemAPI.Time.DeltaTime;
         var speed = 4f;
 
-        foreach (var (input, trans) in SystemAPI.Query<RefRO<CubeInput>, RefRW<LocalTransform>>().WithAll<Simulate>())
+        foreach (var (input, trans) in SystemAPI.Query<RefRO<CubeInput>, RefRW<LocalTransform>>().WithAll<GhostOwnerIsLocal>())
         {
             var moveInput = new float2(input.ValueRO.Horizontal, input.ValueRO.Vertical);
             moveInput = deltaTime * speed * math.normalizesafe(moveInput);

@@ -7,8 +7,8 @@ using UnityEngine.InputSystem;
 
 public struct CameraInput : IInputComponentData
 {
-    public float MouseX;
-    public float MouseY;
+    public sbyte MouseX;
+    public sbyte MouseY;
 }
 
 public class CameraInputAuthoring : MonoBehaviour
@@ -77,12 +77,24 @@ public partial struct ClientCameraInput : ISystem
         var mouseX = mouseDelta.x;
         var mouseY = mouseDelta.y;
 
+        if (mouseX > 127)
+            mouseX = 127;
+        if (mouseX < -128)
+            mouseX = -128;
+        if (mouseY > 127)
+            mouseY = 127;
+        if (mouseY < -128)
+            mouseY = -128;
+
+        var mouseXsbyte = (sbyte) math.round(mouseX);
+        var mouseYsbyte = (sbyte) math.round(mouseY);
+
         foreach (var cameraInput in SystemAPI.Query<RefRW<CameraInput>>().WithAll<GhostOwnerIsLocal>())
         {
             cameraInput.ValueRW = new CameraInput
             {
-                MouseX = mouseX,
-                MouseY = mouseY
+                MouseX = mouseXsbyte,
+                MouseY = mouseYsbyte
             };
         }
     }

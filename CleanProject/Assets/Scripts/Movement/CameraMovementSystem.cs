@@ -23,7 +23,7 @@ public partial struct CameraMovementSystem : ISystem
     public void OnUpdate(ref SystemState state)
     {
         var deltaTime = SystemAPI.Time.DeltaTime;
-        foreach (var (input, trans) in SystemAPI.Query<RefRO<CameraInput>, RefRW<LocalTransform>>().WithAll<Simulate>())
+        foreach (var (input, trans) in SystemAPI.Query<RefRO<CameraInput>, RefRW<LocalTransform>>().WithAll<GhostOwnerIsLocal>())
         {
             var cameraXRotation = input.ValueRO.MouseX;
 

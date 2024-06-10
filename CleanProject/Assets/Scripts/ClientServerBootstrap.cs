@@ -96,7 +96,7 @@ public class CleanDriverConstructor : INetworkStreamDriverConstructor
         var settings = DefaultDriverBuilder.GetNetworkServerSettings();
         if (settings.TryGet(out NetworkConfigParameter networkConfig))
         {
-            networkConfig.sendQueueCapacity = networkConfig.receiveQueueCapacity = 5000;
+            networkConfig.sendQueueCapacity = networkConfig.receiveQueueCapacity = 1000;
             settings.AddRawParameterStruct(ref networkConfig);
         }
         DefaultDriverBuilder.RegisterServerDriver(world, ref driverStore, netDebug, settings);

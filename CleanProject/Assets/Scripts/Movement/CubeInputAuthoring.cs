@@ -1,5 +1,3 @@
-using System;
-using System.Diagnostics;
 using Unity.Entities;
 using Unity.Mathematics;
 using Unity.NetCode;
@@ -8,8 +6,8 @@ using UnityEngine.InputSystem;
 
 public struct CubeInput : IInputComponentData
 {
-    public int Horizontal;
-    public int Vertical;
+    public sbyte Horizontal;
+    public sbyte Vertical;
 }
 
 [DisallowMultipleComponent]
@@ -69,7 +67,7 @@ public partial struct ThinCubeInput : ISystem
         if (SystemAPI.TryGetSingleton<CommandTarget>(out var commandTarget) && commandTarget.targetEntity == Entity.Null)
             CreateThinClientPlayer(ref state);
 
-        var randomAngle = math.radians(UnityEngine.Random.Range(0, 360));
+        var randomAngle = math.round(math.radians(UnityEngine.Random.Range(0, 127)));
         
         //check if the value 
         foreach (var (playerInput, cameraInput) in SystemAPI.Query<RefRW<CubeInput>, RefRW<CameraInput>>().WithAll<GhostOwnerIsLocal>())
@@ -77,7 +75,7 @@ public partial struct ThinCubeInput : ISystem
             playerInput.ValueRW = default;
             playerInput.ValueRW.Vertical = 1;
 
-            cameraInput.ValueRW.MouseX = randomAngle;
+            cameraInput.ValueRW.MouseX = (sbyte) randomAngle;
         }
     }
 
