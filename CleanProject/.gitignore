@@ -2,6 +2,8 @@
 /[Aa]ssets/Editor/
 /[Aa]ssets/Editor.meta
 /[Aa]ssets/Runtime/
+/[Aa]ssets/SceneDependencyCache/
+/[Aa]ssets/SceneDependencyCache.meta
 /[Aa]ssets/Runtime.meta
 /[Aa]ssets/BuildPipeline.asset
 /[Aa]ssets/BuildPipeline.asset.meta
