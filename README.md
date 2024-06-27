@@ -8,9 +8,11 @@ It was made by [Felix Beinssen](https://github.com/Chafficui) for his bachelor t
 
 From the project a stand-alone game server running headless in a console and a stand-alone game-client with a graphical user interface can be built, both for Windows and Linux. Both use IL2CPP, not mono. The game server accepts network connections from game clients. The game client should be run on multiple PCs and each game client process can run several logical clients, using the (amazing) ThinClient feature of Netcode for Entities.
 
+As short video about the project is available on [YouTube](https://youtu.be/rRU4Rt977zA).
+
 # Load Test Results
 
-The project was used to conduct load tests trying to evaluate the maximum amount of connected clients ("concurrent users"). **Running on off-the-shelf hardware the game server was able to host 700+ concurrent users at 30 game server updates per second without visible stuttering.** With higher amounts, for example with 1000+ concurrent users, the network traffic became the bottleneck, resulting in visible stuttering of the avatars. Network traffic being the limiting bottleneck is fully expectable without extensive optimizations for network traffic as usually required for MMOs. Bottlenecks for CPU, GPU or RAM did not appear in the conducted load tests.
+The project was used to conduct load tests trying to evaluate the maximum amount of connected clients ("concurrent users"). **Running on off-the-shelf hardware the game server was able to host 700+ concurrent users at 30 game server updates per second without visible stuttering.** With higher amounts, for example with 1000+ concurrent users, the network traffic became the bottleneck, resulting in visible stuttering of the avatars. Network traffic being the limiting bottleneck is fully expectable without extensive optimizations for network traffic as usually required for massively multiplayer online games. Bottlenecks for CPU, GPU or RAM did not appear in the conducted load tests.
 
 # Current Opinion
 
