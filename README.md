@@ -12,13 +12,15 @@ A short video about the project is available on [YouTube](https://youtu.be/rRU4R
 
 # Load Test Results
 
-The project was used to conduct load tests trying to evaluate the maximum amount of connected clients ("concurrent users"). **Running on off-the-shelf hardware the game server was able to host 700+ concurrent users at 30 updates per second by the game server without visible stuttering.** With higher amounts, for example with 1000+ concurrent users, the network traffic became the bottleneck, resulting in visible stuttering of the avatars. Network traffic being the limiting bottleneck is fully expectable without extensive optimizations for network traffic as usually required for massively multiplayer online games. Bottlenecks for CPU, GPU or RAM did not appear in the conducted load tests.
+The project was used to conduct load tests trying to evaluate the maximum amount of connected clients ("concurrent users"). **Running on off-the-shelf hardware the game server was able to host 700+ concurrent users at 30 updates per second by the game server without visible stuttering.** With higher amounts, for example with 1000+ concurrent users, the network traffic became the bottleneck, resulting in visible stuttering of the avatars. This was fully expected because synchronizing player avatars simply results in a square-growing amount of network traffic, hitting a physical limit at some point. Bottlenecks for CPU, GPU or RAM did not appear in the conducted load tests.
 
 # Current Opinion
 
 During our evaluation Netcode for Entities did run stable and fast and supported several hundred concurrent users. It seems to be possible to build massively multiplayer online games with it. On the other hand its documentation is below our expectations. Especially such an amazing feature like ThinClients is not really documented at all.
 
-Unity's Entity Component System (ECS) adds both performance and complexity to a project. One must make an informed decision whether that is a good deal for the own project. On the other hand its documentation also is below our expectiations. In addition ECS in its current state in June 2024 does lack basic features compared to GameObjects, for example animation, sound or user interface. This lack requires hybrid solutions, adding even more complexity and reducing performance benefits.
+Unity's Entity Component System (ECS) adds both performance and complexity to a project. One must make an informed decision whether that is a good deal for the own project. On the other hand its documentation also is below our expectations. In addition ECS in its current state in June 2024 does lack basic features compared to GameObjects, for example animation, sound or user interface. This lack requires hybrid solutions, adding even more complexity and reducing performance benefits.
+
+Among the programmers at CipSoft it is the opinion that ECS currently is not ready to be used but with the right improvements this might (and hopefully does) change in the future.
 
 # Requirements
 
